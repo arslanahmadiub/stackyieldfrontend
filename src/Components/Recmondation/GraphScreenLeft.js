@@ -1,10 +1,39 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Grid, Paper } from "@material-ui/core";
 
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import CurrencySystem from "./CurrencySystem";
+import randomColor from "randomcolor";
+import { useSelector } from "react-redux";
+
 const GraphScreenLeft = () => {
+  const cryptoData = useSelector(
+    (state) => state.chatScreen.cryptoData.conversion_dict
+  );
+
+  const cryptoDict = useSelector(
+    (state) => state.chatScreen.cryptoData.crypto_dict
+  );
+  const cryptoDictInput = useSelector(
+    (state) => state.chatScreen.userCryptoData.count_crypto
+  );
+
+  const [amountText, setAmountText] = useState(null);
+
+  let covertAmount = () => {
+    let coinPriceWithoutDolor = cryptoDict.bitcoin.price.replace("$", "");
+    let coinPriceWithoutComa = coinPriceWithoutDolor.replace(",", "");
+    let amount = parseFloat(cryptoDictInput) * parseFloat(coinPriceWithoutComa);
+
+    setAmountText("$" + amount);
+  };
+  useEffect(() => {
+    if (cryptoDict) {
+      covertAmount();
+    }
+  }, []);
+
   return (
     <Grid
       container
@@ -25,8 +54,19 @@ const GraphScreenLeft = () => {
         >
           <Grid item xs={12}>
             <div style={{ display: "flex", position: "relative" }}>
-              <div style={{ display: "flex", width: "100px", height: "100px" }}>
-                <CircularProgressbar value={100} text="$12345" />
+              <div
+                style={{
+                  display: "flex",
+                  width: "100px",
+                  height: "100px",
+                  position: "relative",
+                }}
+              >
+                <CircularProgressbar
+                  value={100}
+                  text={amountText && amountText}
+                  style={{ fontSize: "12px" }}
+                />
               </div>
               <div
                 style={{ position: "absolute", bottom: "10px", left: "110%" }}
@@ -39,17 +79,20 @@ const GraphScreenLeft = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} style={{ marginTop: "20px" }}>
+      <Grid item xs={12} style={{ marginTop: "20px", height: "10vh" }}>
         <h3>Conversion Rates</h3>
-        <CurrencySystem
-          color="#373B41"
-          currency="Local Currency"
-          value="1,234,095"
-        />
-        <CurrencySystem color="#FFE771" currency="Bitcoin" value="1,234,095" />
-        <CurrencySystem color="#5FCC8B" currency="Ethereum" value="1,234,095" />
-        <CurrencySystem color="#EC5B5B" currency="Ripple" value="1,234,095" />
-        <CurrencySystem color="#608EE2" currency="Tether" value="1,234,095" />
+
+        <Paper elevation={0} id="conversionRatePaper">
+          {cryptoData &&
+            Object.entries(cryptoData).map(([key, value]) => (
+              <CurrencySystem
+                color={randomColor()}
+                key={key}
+                currency={key.charAt(0).toUpperCase() + key.slice(1)}
+                value={"$" + value}
+              />
+            ))}
+        </Paper>
       </Grid>
     </Grid>
   );

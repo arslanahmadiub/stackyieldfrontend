@@ -2,11 +2,8 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import TabScreen from "./TabScreen";
 import RecmondadPlatformList from "./RecmondadPlatformList";
-import { useSelector } from "react-redux";
 
 const MainRecmondationScreen = () => {
-  const state = useSelector((state) => state);
-  console.log(state);
   return (
     <Grid
       container

@@ -1,6 +1,8 @@
 const initalState = {
   fiatData: [],
   cryptoData: [],
+  userCryptoData: [],
+  userFiatData: [],
 };
 
 export const chatScreenReducer = (state = initalState, action) => {
@@ -14,6 +16,16 @@ export const chatScreenReducer = (state = initalState, action) => {
       return {
         ...state,
         cryptoData: action.payload,
+      };
+    case "SAVE_USER_CRYPTO_DATA":
+      return {
+        ...state,
+        userCryptoData: action.payload,
+      };
+    case "SAVE_USER_FIAT_DATA":
+      return {
+        ...state,
+        userFiatData: action.payload,
       };
     case "RESET":
       return initalState;

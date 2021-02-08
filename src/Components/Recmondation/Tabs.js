@@ -53,7 +53,6 @@ const Tabs = (props) => {
     <div>
       <TabHeader id="tabHeader">
         <TabLabelItem
-          id="tabLabelItem1"
           style={{ background: "#19469A", color: "white" }}
           onClick={handelDateClick}
         >
@@ -63,6 +62,7 @@ const Tabs = (props) => {
           headers.map((header, index) => {
             return (
               <TabLabelItem
+                style={{ background: "#ffffff", color: "white" }}
                 key={header}
                 onClick={changeTab(index)}
                 selected={selectedTab === index}

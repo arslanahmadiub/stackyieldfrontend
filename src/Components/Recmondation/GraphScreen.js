@@ -22,7 +22,7 @@ const GraphScreen = () => {
           <GraphScreenLeft />
         </Grid>
         {/* center grid */}
-        <Grid item md={5}>
+        <Grid item md={9}>
           <div
             style={{
               display: "flex",
@@ -34,9 +34,9 @@ const GraphScreen = () => {
           <GraphScreenCenter />
         </Grid>
         {/* right grid */}
-        <Grid item md={4}>
+        {/* <Grid item md={4}>
           <GraphScreenRight />
-        </Grid>
+        </Grid> */}
       </Grid>
       <Grid
         container

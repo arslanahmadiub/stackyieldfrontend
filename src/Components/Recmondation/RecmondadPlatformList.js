@@ -1,8 +1,13 @@
 import React from "react";
 import { Paper, Grid } from "@material-ui/core";
 import { MainColor, Background } from "../../Colors.json";
+import { useSelector } from "react-redux";
 
 const RecmondadPlatformList = () => {
+  const cryptoData = useSelector(
+    (state) => state.chatScreen.cryptoData.reward_dict
+  );
+
   return (
     <Grid container direction="column" justify="flex-start" alignItems="center">
       <Grid
@@ -31,171 +36,34 @@ const RecmondadPlatformList = () => {
         }}
       >
         <Paper elevation={0} id="recmondedPlatFormPaper">
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
-          <div
-            style={{
-              paddingLeft: "25px",
-              paddingTop: "15px",
-              paddingBottom: "5px",
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ fontSize: "2rem", fontWeight: "600" }}>ASD_Stack</p>
-            <p
-              style={{ fontSize: "1rem", fontWeight: "600", color: MainColor }}
-            >
-              https://www.youtube.com/
-            </p>
-          </div>
+          {cryptoData &&
+            Object.entries(cryptoData).map(([key, value]) => (
+              <div
+                style={{
+                  paddingLeft: "25px",
+                  paddingTop: "15px",
+                  paddingBottom: "5px",
+                  overflow: "hidden",
+                }}
+                key={key}
+              >
+                <p style={{ fontSize: "1.5rem", fontWeight: "600" }}>{key}</p>
+                <a
+                  href={value.Link}
+                  target="_blank"
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: "600",
+                    color: MainColor,
+                  }}
+                >
+                  {value.Link}
+                </a>
+                <p style={{ fontSize: "1rem", fontWeight: "400" }}>
+                  Reward: {value.Reward}
+                </p>
+              </div>
+            ))}
         </Paper>
       </Grid>
     </Grid>

@@ -14,6 +14,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 import { cryptoDataAction } from "../../action/chatScreenAction";
 import { fiatDataAction } from "../../action/chatScreenAction";
+import { userCryptoDataSaveAction } from "../../action/chatScreenAction";
+import { userFiatDataSaveAction } from "../../action/chatScreenAction";
 import { formFiatApi } from "../../Services/ChatServices";
 import { formCryptoApi } from "../../Services/ChatServices";
 import { useDispatch } from "react-redux";
@@ -58,7 +60,7 @@ const ChatScreen = () => {
     {
       type: "system",
 
-      message: "How much bitcoins you have?",
+      message: "How much this cryptocurrency you have?",
     },
     {
       type: "system",
@@ -98,7 +100,10 @@ const ChatScreen = () => {
         return textQuestionAnswerComponent("Enter Crypto Currency Name...");
 
       case 5:
-        return textQuestionAnswerComponent("Enter Bitcoin Number...", "number");
+        return textQuestionAnswerComponent(
+          "Enter Amount of cryptocurrency",
+          "number"
+        );
 
       case 7:
         return boleanQuestionAnswerComponent();
@@ -313,8 +318,9 @@ const ChatScreen = () => {
     try {
       setLoading(true);
       let { data } = await formFiatApi(apiOneFormData);
-      console.log(data);
+
       setLoading(false);
+      dispatch(userFiatDataSaveAction(formFiatData));
 
       dispatch(fiatDataAction(data));
     } catch (error) {
@@ -338,7 +344,9 @@ const ChatScreen = () => {
       setLoading(true);
 
       let { data } = await formCryptoApi(apiTwoFormData);
-      console.log(data);
+
+      dispatch(userCryptoDataSaveAction(formCryptoData));
+
       setLoading(false);
 
       dispatch(cryptoDataAction(data));
@@ -355,14 +363,14 @@ const ChatScreen = () => {
     let q2Answer = messageData[7].message;
 
     if (q1Answer === "Yes" && q2Answer === "No") {
-      secondApi();
+      await secondApi();
       history.push("/crypto");
     } else if (q1Answer === "No" && q2Answer === "Yes") {
-      firstApi();
+      await firstApi();
       history.push("/crypto");
     } else {
-      secondApi();
-      firstApi();
+      await secondApi();
+      await firstApi();
       history.push("/crypto");
     }
   };
