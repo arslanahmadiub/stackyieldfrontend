@@ -15,7 +15,7 @@
 #chatPaper {
   height: 72vh;
   border: 3px solid #8b8a8a;
-  background: #eeeeee;
+  background: #ffffff;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;
@@ -27,7 +27,7 @@
 #inSidePaper {
   height: 57vh;
 
-  background: #eeeeee;
+  background: #ffffff;
 
   position: relative;
   overflow: auto;
@@ -128,14 +128,14 @@
 
 // Tabs Designing
 
-#recmondedPlatFormPaper {
+.recmondedPlatFormPaper {
   height: 100%;
 
   background: #eeeeee;
-
+  padding-right: 5%;
   overflow: auto;
 }
 
 .CircularProgressbar .CircularProgressbar-text {
-  font-size: 15px !important;
+  font-size: 12px !important;
 }

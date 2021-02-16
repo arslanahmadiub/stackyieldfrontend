@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Tabs from "./Tabs";
 import GraphScreen from "./GraphScreen";
+import FiatScreen from "./FiatScreen";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
@@ -8,10 +9,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles } from "@material-ui/core";
 import { formCryptoApi } from "../../Services/ChatServices";
-
+import { tabAction } from "../../action/tabAction";
+import { useDispatch, useSelector } from "react-redux";
 import { cryptoDataAction } from "../../action/chatScreenAction";
-
-import { useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -30,6 +30,9 @@ const TabScreen = (props) => {
   const [showDateInput, setShowDateInput] = useState(false);
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
+
+  const userCrypto = useSelector((state) => state.chatScreen.cryptoData);
+  const userFiat = useSelector((state) => state.chatScreen.fiatData);
 
   useEffect(() => {
     getShow();
@@ -61,7 +64,6 @@ const TabScreen = (props) => {
 
       dispatch(cryptoDataAction(data));
     } catch (error1) {
-      console.log(error1);
       setLoading(false);
     }
 
@@ -72,16 +74,41 @@ const TabScreen = (props) => {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Tabs
-        headers={[""]}
-        dateShow={(value) => {
-          getShow(value);
-        }}
-      >
-        <GraphScreen />
 
-        <h1>Hello 1 Week</h1>
-      </Tabs>
+      {!Array.isArray(userCrypto) && !Array.isArray(userFiat) ? (
+        <Tabs
+          headers={["Crypto", "Fiat"]}
+          dateShow={(value) => {
+            getShow(value);
+          }}
+        >
+          <GraphScreen />
+          <FiatScreen />
+        </Tabs>
+      ) : !Array.isArray(userCrypto) ? (
+        <Tabs
+          headers={["Crypto"]}
+          dateShow={(value) => {
+            getShow(value);
+          }}
+        >
+          <GraphScreen />
+
+          <h1>Hello 1 Week</h1>
+        </Tabs>
+      ) : !Array.isArray(userFiat) ? (
+        <Tabs
+          headers={["Fiat"]}
+          dateShow={(value) => {
+            getShow(value);
+          }}
+        >
+          <FiatScreen />
+
+          <h1>Hello 1 Week</h1>
+        </Tabs>
+      ) : null}
+
       <div
         style={{
           position: "absolute",

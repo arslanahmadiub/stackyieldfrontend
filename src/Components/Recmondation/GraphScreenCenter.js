@@ -27,6 +27,25 @@ const GraphScreenCenter = () => {
     (state) => state.chatScreen.cryptoData.profit_dict
   );
 
+  const [rateSetting, setRateSetting] = useState(null);
+
+  let currencyFunction = () => {
+    let currency = Object.keys(cryptoDict)[0];
+    let cryptoObject = {
+      currency: Object.keys(cryptoDict)[0],
+      changeRate: cryptoDict[currency].changerate,
+      price: cryptoDict[currency].price,
+    };
+
+    setRateSetting(cryptoObject);
+  };
+
+  useEffect(() => {
+    if (cryptoDict !== undefined) {
+      currencyFunction();
+    }
+  }, [cryptoDict, profitDataList, profitData]);
+
   let series = [44, 55, 13, 43, 22];
   let options = {
     chart: {
@@ -68,16 +87,21 @@ const GraphScreenCenter = () => {
               </TableRow>
               <TableRow>
                 <TableCell>
-                  {cryptoDict
+                  {/* {cryptoDict
                     ? Object.keys(cryptoDict)[0].charAt(0).toUpperCase() +
                       Object.keys(cryptoDict)[0].slice(1)
-                    : null}
+                    : null} */}
+                  {rateSetting &&
+                    rateSetting.currency.charAt(0).toUpperCase() +
+                      rateSetting.currency.slice(1)}
                 </TableCell>
                 <TableCell>
-                  {cryptoDict ? cryptoDict.bitcoin.changerate : null}
+                  {/* {cryptoDict ? cryptoDict.`${key}`.changerate : null} */}
+                  {rateSetting && rateSetting.changeRate}
                 </TableCell>
                 <TableCell>
-                  {cryptoDict ? cryptoDict.bitcoin.price : null}
+                  {/* {cryptoDict ? cryptoDict.bitcoin.price : null} */}
+                  {rateSetting && rateSetting.price}
                 </TableCell>
               </TableRow>
             </TableHead>

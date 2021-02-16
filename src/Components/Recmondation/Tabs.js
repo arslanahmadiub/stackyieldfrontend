@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Styled from "styled-components";
+import { tabAction } from "../../action/tabAction";
+import { useDispatch, useSelector } from "react-redux";
+import { changeTabAction } from "../../action/tabAction";
 
 const TabHeader = Styled.div`
     display: flex;
@@ -15,10 +18,9 @@ const TabLabelItem = Styled.div`
     cursor: pointer;
     font-weight: 600;
     position: relative;
-    color: ${(props) => (props.selected ? "white" : "#19469A")};
+    color: "#19469A";
     padding: 0px 20px;
-    background:${(props) => (props.selected ? "#19469A" : "white")};
-
+border-bottom:${(props) => (props.selected ? "2px solid #19469A" : "")};
     @media (max-width: 960px){
         font-size: 16px;
     }
@@ -31,12 +33,35 @@ const TabBody = Styled.div`
 `;
 
 const Tabs = (props) => {
+  const dispatch = useDispatch();
+  const tabName = useSelector((state) => state.tab.tabNumber);
   const [selectedTab, setSelectedTab] = useState(0);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const tabNumberGet = useSelector((state) => state.tab.newTabNumber);
+
+  useEffect(() => {
+    if (tabNumberGet !== null && tabNumberGet === 0) {
+      setSelectedTab(0);
+
+      setTimeout(() => {
+        dispatch(changeTabAction(null));
+      }, 500);
+    }
+  }, [tabNumberGet]);
+
   const headers = props.headers;
-  const changeTab = (index) => (event) => {
+  const changeTab = (index, h) => (event) => {
+    props.dateShow(false);
+    setShowDatePicker(false);
     setSelectedTab(index);
+    dispatch(tabAction(h));
   };
+
+  useEffect(() => {
+    dispatch(tabAction(headers[0]));
+  }, []);
+
   let handelTabBodyClick = () => {
     if (showDatePicker) {
       setShowDatePicker(false);
@@ -45,26 +70,31 @@ const Tabs = (props) => {
   };
 
   let handelDateClick = () => {
-    props.dateShow(!showDatePicker);
-    setShowDatePicker(!showDatePicker);
+    if (tabName === "Crypto") {
+      props.dateShow(!showDatePicker);
+      setShowDatePicker(!showDatePicker);
+    }
   };
 
   return (
     <div>
       <TabHeader id="tabHeader">
         <TabLabelItem
-          style={{ background: "#19469A", color: "white" }}
+          style={{
+            background: "#19469A",
+            color: "white",
+          }}
           onClick={handelDateClick}
         >
-          User Date Input
+          {tabName === "Crypto" ? "User Date Input" : "Recommended Crypto"}
         </TabLabelItem>
         {headers &&
           headers.map((header, index) => {
             return (
               <TabLabelItem
-                style={{ background: "#ffffff", color: "white" }}
+                style={{ color: "#19469A" }}
                 key={header}
-                onClick={changeTab(index)}
+                onClick={changeTab(index, header)}
                 selected={selectedTab === index}
                 id="tabLabelItem"
               >

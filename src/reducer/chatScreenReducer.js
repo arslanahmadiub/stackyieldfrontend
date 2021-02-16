@@ -1,8 +1,8 @@
 const initalState = {
   fiatData: [],
   cryptoData: [],
-  userCryptoData: [],
-  userFiatData: [],
+  userCryptoData: null,
+  userFiatData: null,
 };
 
 export const chatScreenReducer = (state = initalState, action) => {

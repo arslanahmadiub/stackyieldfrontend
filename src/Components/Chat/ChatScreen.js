@@ -312,6 +312,11 @@ const ChatScreen = () => {
       count_fiat: messageData[9].message,
     };
 
+    let dispatchUserData = {
+      count_fiat: messageData[9].message,
+      end_date: messageData[11].message,
+    };
+
     let newData2 = JSON.stringify(formFiatData);
     apiOneFormData.append("data", newData2);
 
@@ -320,11 +325,10 @@ const ChatScreen = () => {
       let { data } = await formFiatApi(apiOneFormData);
 
       setLoading(false);
-      dispatch(userFiatDataSaveAction(formFiatData));
+      dispatch(userFiatDataSaveAction(dispatchUserData));
 
       dispatch(fiatDataAction(data));
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };
@@ -351,7 +355,6 @@ const ChatScreen = () => {
 
       dispatch(cryptoDataAction(data));
     } catch (error1) {
-      console.log(error1);
       setLoading(false);
     }
   };

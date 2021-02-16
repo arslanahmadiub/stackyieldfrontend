@@ -7,9 +7,20 @@ import CurrencySystem from "./CurrencySystem";
 import randomColor from "randomcolor";
 import { useSelector } from "react-redux";
 
-const GraphScreenLeft = () => {
+const FiatScreenLeft = () => {
   const cryptoData = useSelector(
     (state) => state.chatScreen.cryptoData.conversion_dict
+  );
+
+  const fiatChangeRate = useSelector(
+    (state) =>
+      state.chatScreen.fiatData &&
+      state.chatScreen.fiatData.recommended_fiat_dict.changerate_cryptos
+  );
+
+  const fiatAmount = useSelector(
+    (state) =>
+      state.chatScreen.userFiatData && state.chatScreen.userFiatData.count_fiat
   );
 
   const cryptoDict = useSelector((state) =>
@@ -68,7 +79,7 @@ const GraphScreenLeft = () => {
               >
                 <CircularProgressbar
                   value={100}
-                  text={amountText && amountText}
+                  text={fiatAmount && "$" + fiatAmount}
                   style={{ fontSize: "12px" }}
                 />
               </div>
@@ -84,16 +95,16 @@ const GraphScreenLeft = () => {
         </Grid>
       </Grid>
       <Grid item xs={12} style={{ marginTop: "20px", height: "10vh" }}>
-        <h3>Conversion Rates</h3>
+        <h3>Change rate per 24 hours</h3>
 
         <Paper elevation={0} id="conversionRatePaper">
-          {cryptoData &&
-            Object.entries(cryptoData).map(([key, value]) => (
+          {fiatChangeRate &&
+            Object.entries(fiatChangeRate).map(([key, value]) => (
               <CurrencySystem
                 color={randomColor()}
                 key={key}
                 currency={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={"$" + value}
+                value={value}
               />
             ))}
         </Paper>
@@ -102,4 +113,4 @@ const GraphScreenLeft = () => {
   );
 };
 
-export default GraphScreenLeft;
+export default FiatScreenLeft;
