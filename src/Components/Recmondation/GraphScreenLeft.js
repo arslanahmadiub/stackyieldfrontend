@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Paper } from "@material-ui/core";
-
-import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import CurrencySystem from "./CurrencySystem";
 import randomColor from "randomcolor";
 import { useSelector } from "react-redux";
+import CustomCircleCrypto from "./CustomCircleCrypto";
+import { Hidden } from "@material-ui/core";
 
 const GraphScreenLeft = () => {
   const cryptoData = useSelector(
@@ -23,6 +23,8 @@ const GraphScreenLeft = () => {
 
   const [amountText, setAmountText] = useState(null);
 
+  const currencyWithAmount = useSelector((state) => state.currency.currency);
+
   let covertAmount = () => {
     let currency = Object.keys(cryptoDict)[0];
 
@@ -39,66 +41,118 @@ const GraphScreenLeft = () => {
   }, []);
 
   return (
-    <Grid
-      container
-      direction="column"
-      justify="flex-start"
-      alignItems="flex-start"
-      style={{
-        paddingTop: "10px",
-        paddingLeft: "20px",
-      }}
-    >
-      <Grid item xs={12}>
-        <Grid
-          container
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-        >
-          <Grid item xs={12}>
-            <div style={{ display: "flex", position: "relative" }}>
-              <div
-                style={{
-                  display: "flex",
-                  width: "150px",
-                  height: "150px",
-                  position: "relative",
-                }}
-              >
-                <CircularProgressbar
-                  value={100}
-                  text={amountText && amountText}
-                  style={{ fontSize: "12px" }}
+    <>
+      <Grid container direction="column">
+        {/* top circle full screen */}
+
+        <Hidden only={["xs", "sm"]}>
+          <div style={{ display: "flex", position: "relative" }}>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
+              <div style={{ display: "flex", position: "relative" }}>
+                <CustomCircleCrypto
+                  currency={currencyWithAmount && currencyWithAmount}
+                  amount={amountText && amountText}
                 />
               </div>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
               <div
-                style={{ position: "absolute", bottom: "10px", left: "110%" }}
+                style={{
+                  position: "absolute",
+                  bottom: "10px",
+                  right: "1%",
+                }}
               >
                 <h3>
                   Total <br></br> Investment
                 </h3>
               </div>
+            </Grid>
+          </div>
+        </Hidden>
+
+        {/* top circle bottom screen */}
+
+        <Hidden only={["lg", "md", "xl"]}>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              width: "100vw",
+              justifyContent: "center",
+              flexDirection: "column",
+              overflowY: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                overflowY: "hidden",
+              }}
+            >
+              <CustomCircleCrypto
+                currency={currencyWithAmount && currencyWithAmount}
+                amount={amountText && amountText}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                marginTop: "10px",
+                overflowY: "hidden",
+              }}
+            >
+              <h2>Total Investment</h2>
             </div>
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} style={{ marginTop: "20px", height: "10vh" }}>
-        <h3>Conversion Rates</h3>
+        </Hidden>
 
-        <Paper elevation={0} id="conversionRatePaper">
-          {cryptoData &&
-            Object.entries(cryptoData).map(([key, value]) => (
-              <CurrencySystem
-                color={randomColor()}
-                key={key}
-                currency={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={"$" + value}
-              />
-            ))}
-        </Paper>
+        <Hidden only={["xs", "sm"]}>
+          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
+            <Grid item xs={12}>
+              <h3> Conversion Rates</h3>
+
+              <Paper elevation={0} id="conversionRatePaper">
+                {cryptoData &&
+                  Object.entries(cryptoData).map(([key, value]) => (
+                    <CurrencySystem
+                      color={randomColor()}
+                      key={key}
+                      currency={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={value}
+                    />
+                  ))}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Hidden>
+
+        <Hidden only={["lg", "md", "xl"]}>
+          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
+            <Grid item xs={12}>
+              <h3> Conversion Rates</h3>
+
+              <Paper elevation={0} id="conversionRatePaper">
+                {cryptoData &&
+                  Object.entries(cryptoData).map(([key, value]) => (
+                    <CurrencySystem
+                      color={randomColor()}
+                      key={key}
+                      currency={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={value}
+                    />
+                  ))}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Hidden>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

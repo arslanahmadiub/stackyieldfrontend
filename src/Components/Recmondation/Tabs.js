@@ -43,6 +43,7 @@ const Tabs = (props) => {
   useEffect(() => {
     if (tabNumberGet !== null && tabNumberGet === 0) {
       setSelectedTab(0);
+      dispatch(tabAction("Crypto"));
 
       setTimeout(() => {
         dispatch(changeTabAction(null));

@@ -12,10 +12,10 @@ const MainRecmondationScreen = () => {
       alignItems="flex-start"
       style={{ padding: "1%" }}
     >
-      <Grid item xs={3} style={{ paddingRight: "10px" }}>
+      <Grid item xs={12} md={3} style={{ paddingRight: "10px" }}>
         <RecmondadPlatformList />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={12} md={9}>
         <TabScreen />
       </Grid>
     </Grid>

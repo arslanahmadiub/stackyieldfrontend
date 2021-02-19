@@ -20,7 +20,7 @@ import { formFiatApi } from "../../Services/ChatServices";
 import { formCryptoApi } from "../../Services/ChatServices";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
-
+import { resetUser } from "../../action/chatScreenAction";
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -45,6 +45,10 @@ const ChatScreen = () => {
     setDateValue(endDate);
     setShowDateBox(false);
   };
+
+  useEffect(() => {
+    dispatch(resetUser());
+  }, []);
 
   let questionList = [
     {
@@ -90,6 +94,18 @@ const ChatScreen = () => {
   const [firstAnswer, setFirstAnswer] = useState(null);
 
   const [messageInput, setMessageInput] = useState("");
+
+  let handelReload = () => {
+    setMessages([
+      {
+        type: "system",
+        ansType: "bol",
+        message: "Do you own a cryptocurrency?",
+      },
+    ]);
+    setFirstAnswer(null);
+    setMessageInput("");
+  };
 
   let renderAnswer = () => {
     switch (messages.length) {
@@ -220,7 +236,7 @@ const ChatScreen = () => {
               </div>
 
               <input
-                id="messageTextInput"
+                id="datemessageTextInput"
                 placeholder={placeholderValue || ""}
                 style={{ marginTop: "10px" }}
                 onClick={handelDateInput}
@@ -388,6 +404,21 @@ const ChatScreen = () => {
         >
           <Button variant="contained" color="primary" onClick={handelSubmit}>
             Submit
+          </Button>
+        </Grid>
+      </Grid>
+    );
+  };
+  let reloadComponent = () => {
+    return (
+      <Grid container style={{ marginTop: "2%" }} id="messageContainer">
+        <Grid
+          item
+          xs={12}
+          style={{ display: "flex", width: "100%", justifyContent: "center" }}
+        >
+          <Button variant="contained" color="primary" onClick={handelReload}>
+            Try Again
           </Button>
         </Grid>
       </Grid>
@@ -615,7 +646,10 @@ const ChatScreen = () => {
           })}
         </Paper>
       </Grid>
-      {renderAnswer()}
+      {/* {renderAnswer()} */}
+      {messages.length === 11 && messages[10].message === "GoodBy...."
+        ? reloadComponent()
+        : renderAnswer()}
     </>
   );
 };

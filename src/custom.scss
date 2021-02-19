@@ -23,6 +23,18 @@
   margin-right: 5%;
   overflow: hidden;
 }
+#chatPaperMobile {
+  height: 72vh;
+  border: 3px solid #8b8a8a;
+  background: #ffffff;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 5%;
+  position: relative;
+  margin-left: 5px;
+  margin-right: 5px;
+  overflow: hidden;
+}
 
 #inSidePaper {
   height: 57vh;
@@ -44,11 +56,11 @@
 
 #conversionRatePaper {
   width: 100%;
-  height: 40vh;
-  width: 100%;
+  height: 320px;
+
   overflow: auto;
 
-  padding-right: 20%;
+  padding-right: 10%;
   margin-top: 5%;
 }
 
@@ -105,7 +117,24 @@
   border: 1px solid #ccc;
   border-radius: 100px;
 }
+#datemessageTextInput {
+  display: flex;
+  height: 45px;
+  font-size: 17px;
+  width: 80%;
+  padding: 0 20px;
+
+  font-weight: 400;
+  border: 1px solid #ccc;
+  border-radius: 100px;
+}
+
 #messageTextInput:focus {
+  border-radius: 100px;
+  border: 2px solid lightblue;
+  outline-width: 0px;
+}
+#datemessageTextInput:focus {
   border-radius: 100px;
   border: 2px solid lightblue;
   outline-width: 0px;
@@ -138,4 +167,11 @@
 
 .CircularProgressbar .CircularProgressbar-text {
   font-size: 12px !important;
+}
+
+.customCircle {
+  border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  border: 12px solid #3e98c7;
 }

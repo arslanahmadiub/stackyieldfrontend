@@ -1,15 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Paper } from "@material-ui/core";
-
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import CurrencySystem from "./CurrencySystem";
 import randomColor from "randomcolor";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { formCryptoApi } from "../../Services/ChatServices";
+import { userCryptoDataSaveAction } from "../../action/chatScreenAction";
+import { cryptoDataAction } from "../../action/chatScreenAction";
+import { changeTabAction } from "../../action/tabAction";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
+import { makeStyles } from "@material-ui/core/styles";
+import CustomCircle from "./CustomCircle";
+import { Hidden } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#31BDF4",
+    background: "rgba(182,172,162,0.2)",
+  },
+}));
 
 const FiatScreenLeft = () => {
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const cryptoData = useSelector(
     (state) => state.chatScreen.cryptoData.conversion_dict
+  );
+
+  const fiatDate = useSelector(
+    (state) =>
+      state.chatScreen.userFiatData && state.chatScreen.userFiatData.end_date
+  );
+
+  const fiatConversionDict = useSelector(
+    (state) =>
+      !Array.isArray(state.chatScreen.fiatData) &&
+      state.chatScreen.fiatData.recommended_fiat_dict.converted_cryptos
   );
 
   const fiatChangeRate = useSelector(
@@ -49,67 +80,150 @@ const FiatScreenLeft = () => {
     }
   }, []);
 
+  let secondApi = async (t, c) => {
+    let apiTwoFormData = new FormData();
+    let formCryptoData = {
+      type_crypto: t,
+      count_crypto: c.toString(),
+      end_date: fiatDate && fiatDate,
+    };
+    let newData = JSON.stringify(formCryptoData);
+    apiTwoFormData.append("data", newData);
+    try {
+      setLoading(true);
+      let { data } = await formCryptoApi(apiTwoFormData);
+
+      dispatch(userCryptoDataSaveAction(formCryptoData));
+      setLoading(false);
+      dispatch(cryptoDataAction(data));
+      dispatch(changeTabAction(0));
+    } catch (error1) {
+      setLoading(false);
+    }
+  };
+
+  let conversionClick = (v, k) => {
+    secondApi(k, v);
+  };
+
   return (
-    <Grid
-      container
-      direction="column"
-      justify="flex-start"
-      alignItems="flex-start"
-      style={{
-        paddingTop: "10px",
-        paddingLeft: "20px",
-      }}
-    >
-      <Grid item xs={12}>
-        <Grid
-          container
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-        >
-          <Grid item xs={12}>
-            <div style={{ display: "flex", position: "relative" }}>
+    <>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Grid container direction="column">
+        {/* top circle full screen */}
+
+        <Hidden only={["xs", "sm"]}>
+          <div style={{ display: "flex", position: "relative" }}>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
+              <div style={{ display: "flex", position: "relative" }}>
+                <CustomCircle text={fiatAmount && "$" + fiatAmount} />
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
               <div
                 style={{
-                  display: "flex",
-                  width: "150px",
-                  height: "150px",
-                  position: "relative",
+                  position: "absolute",
+                  bottom: "10px",
+                  right: "1%",
                 }}
-              >
-                <CircularProgressbar
-                  value={100}
-                  text={fiatAmount && "$" + fiatAmount}
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-              <div
-                style={{ position: "absolute", bottom: "10px", left: "110%" }}
               >
                 <h3>
                   Total <br></br> Investment
                 </h3>
               </div>
+            </Grid>
+          </div>
+        </Hidden>
+
+        {/* top circle bottom screen */}
+
+        <Hidden only={["lg", "md", "xl"]}>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              width: "100vw",
+              justifyContent: "center",
+              flexDirection: "column",
+              overflowY: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                overflowY: "hidden",
+              }}
+            >
+              <CustomCircle text={fiatAmount && "$" + fiatAmount} />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                marginTop: "10px",
+                overflowY: "hidden",
+              }}
+            >
+              <h2>Total Investment</h2>
             </div>
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} style={{ marginTop: "20px", height: "10vh" }}>
-        <h3>Change rate per 24 hours</h3>
+        </Hidden>
 
-        <Paper elevation={0} id="conversionRatePaper">
-          {fiatChangeRate &&
-            Object.entries(fiatChangeRate).map(([key, value]) => (
-              <CurrencySystem
-                color={randomColor()}
-                key={key}
-                currency={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={value}
-              />
-            ))}
-        </Paper>
+        <Hidden only={["xs", "sm"]}>
+          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
+            <Grid item xs={12}>
+              <h3> Conversion Rates</h3>
+
+              <Paper elevation={0} id="conversionRatePaper">
+                {fiatConversionDict &&
+                  Object.entries(fiatConversionDict).map(([key, value]) => (
+                    <CurrencySystem
+                      color={randomColor()}
+                      key={key}
+                      currency={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={value}
+                      button={true}
+                      handelClick={() => {
+                        conversionClick(value, key);
+                      }}
+                    />
+                  ))}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Hidden>
+
+        <Hidden only={["lg", "md", "xl"]}>
+          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
+            <Grid item xs={12}>
+              <h3> Conversion Rates</h3>
+
+              <Paper elevation={0} id="conversionRatePaper">
+                {fiatConversionDict &&
+                  Object.entries(fiatConversionDict).map(([key, value]) => (
+                    <CurrencySystem
+                      color={randomColor()}
+                      key={key}
+                      currency={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={value}
+                      button={true}
+                      handelClick={() => {
+                        conversionClick(value, key);
+                      }}
+                    />
+                  ))}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Hidden>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

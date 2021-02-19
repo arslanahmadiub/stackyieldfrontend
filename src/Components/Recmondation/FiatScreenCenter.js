@@ -17,6 +17,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { userCryptoDataSaveAction } from "../../action/chatScreenAction";
 import { cryptoDataAction } from "../../action/chatScreenAction";
 import { formCryptoApi } from "../../Services/ChatServices";
+import { Hidden } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 400,
+  },
+  mobileTable: {
+    minWidth: 200,
   },
 }));
 const FiatScreenCenter = () => {
@@ -42,7 +46,7 @@ const FiatScreenCenter = () => {
       state.chatScreen.userFiatData && state.chatScreen.userFiatData.end_date
   );
 
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   let secondApi = async () => {
     let apiTwoFormData = new FormData();
@@ -76,62 +80,122 @@ const FiatScreenCenter = () => {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Grid
-        container
-        direction="column"
-        style={{
-          paddingTop: "20px",
-          paddingLeft: "10%",
-          paddingRight: "10%",
-        }}
-      >
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  colSpan="2"
-                  style={{ textAlign: "center", fontSize: "24px" }}
-                >
-                  Recommended Cryptocurrency
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>
-                  {fiatData &&
-                    fiatData.Name.charAt(0).toUpperCase() +
-                      fiatData.Name.slice(1)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Reward Rate</TableCell>
-                <TableCell>{fiatData && fiatData.changerate}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Conversion Rate</TableCell>
-                <TableCell>{fiatData && fiatData.conversionrate}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Price of Crypto</TableCell>
-                <TableCell>{fiatData && fiatData.price}</TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-        </TableContainer>
-        <br></br>
-        <br></br>
-
-        <Button
+      <Hidden only={["sm", "xs"]}>
+        <Grid
+          container
+          direction="column"
           style={{
-            background: "#19469A",
-            color: "white",
+            paddingTop: "20px",
+            paddingLeft: "10%",
+            paddingRight: "10%",
+            marginTop: "12%",
           }}
-          onClick={handelStacking}
         >
-          Get Stacking
-        </Button>
-      </Grid>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    colSpan="2"
+                    style={{ textAlign: "center", fontSize: "24px" }}
+                  >
+                    Recommended Cryptocurrency
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>
+                    {fiatData &&
+                      fiatData.Name.charAt(0).toUpperCase() +
+                        fiatData.Name.slice(1)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Reward Rate</TableCell>
+                  <TableCell>{fiatData && fiatData.changerate}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Conversion Rate</TableCell>
+                  <TableCell>{fiatData && fiatData.conversionrate}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Price of Crypto</TableCell>
+                  <TableCell>{fiatData && fiatData.price}</TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
+          </TableContainer>
+          <br></br>
+          <br></br>
+
+          <Button
+            style={{
+              background: "#19469A",
+              color: "white",
+            }}
+            onClick={handelStacking}
+          >
+            Get Stacking
+          </Button>
+        </Grid>
+      </Hidden>
+      <Hidden only={["lg", "md", "xl"]}>
+        <Grid
+          container
+          direction="column"
+          style={{
+            padding: "2%",
+            marginTop: "5%",
+          }}
+        >
+          <TableContainer component={Paper} style={{ width: "100vw" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    colSpan="2"
+                    style={{ textAlign: "center", fontSize: "24px" }}
+                  >
+                    Recommended Cryptocurrency
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>
+                    {fiatData &&
+                      fiatData.Name.charAt(0).toUpperCase() +
+                        fiatData.Name.slice(1)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Reward Rate</TableCell>
+                  <TableCell>{fiatData && fiatData.changerate}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Conversion Rate</TableCell>
+                  <TableCell>{fiatData && fiatData.conversionrate}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Price of Crypto</TableCell>
+                  <TableCell>{fiatData && fiatData.price}</TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
+          </TableContainer>
+          <br></br>
+          <br></br>
+
+          <Button
+            style={{
+              background: "#19469A",
+              color: "white",
+            }}
+            onClick={handelStacking}
+          >
+            Get Stacking
+          </Button>
+        </Grid>
+      </Hidden>
     </>
   );
 };

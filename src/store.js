@@ -5,6 +5,6 @@ import { persistStore } from "redux-persist";
 import rootReducer from "./reducer/index";
 
 export const store = createStore(rootReducer, composeWithDevTools());
-// export const persistor = persistStore(store);
-// export default { store, persistor };
-export default { store };
+export const persistor = persistStore(store);
+export default { store, persistor };
+// export default { store };
