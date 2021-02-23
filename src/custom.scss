@@ -53,6 +53,23 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+#inSidePaperMobile {
+  height: 57vh;
+
+  background: #ffffff;
+
+  position: relative;
+  overflow: auto;
+}
+
+#inSidePaperMobile::-webkit-scrollbar {
+  display: none;
+}
+
+#inSidePaperMobile {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
 #conversionRatePaper {
   width: 100%;
@@ -91,6 +108,37 @@
   background: #1b5e20;
   color: white;
   padding: 2%;
+  padding-right: 5%;
+  max-width: 70%;
+  max-height: 100%;
+  margin-bottom: 20px;
+
+  overflow: auto;
+}
+.leftMobile p {
+  display: inline-block;
+  border-bottom-left-radius: 20px;
+  float: left;
+  font-size: 16px;
+  background: #0091ea;
+  color: white;
+  padding: 3%;
+  padding-right: 5%;
+  max-width: 70%;
+  overflow: auto;
+  clear: both;
+  margin-bottom: 20px;
+  transition: 0.5s;
+}
+.rightMobile p {
+  display: inline-block;
+  border-top-right-radius: 20px;
+  font-size: 16px;
+  float: right;
+  clear: both;
+  background: #1b5e20;
+  color: white;
+  padding: 3%;
   padding-right: 5%;
   max-width: 70%;
   max-height: 100%;

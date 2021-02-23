@@ -18,6 +18,8 @@ import { userCryptoDataSaveAction } from "../../action/chatScreenAction";
 import { cryptoDataAction } from "../../action/chatScreenAction";
 import { formCryptoApi } from "../../Services/ChatServices";
 import { Hidden } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -40,6 +42,7 @@ const FiatScreenCenter = () => {
       state.chatScreen.fiatData &&
       state.chatScreen.fiatData.recommended_fiat_dict.recommended_crypto
   );
+  let history = useHistory();
 
   const fiatDate = useSelector(
     (state) =>
@@ -61,11 +64,18 @@ const FiatScreenCenter = () => {
     try {
       setLoading(true);
       let { data } = await formCryptoApi(apiTwoFormData);
+      if (data.conversion_dict === "Cryptocurrency not availbale") {
+        setError("Cryptocurrency not availbale");
+      } else {
+        dispatch(userCryptoDataSaveAction(formCryptoData));
+        setLoading(false);
+        dispatch(cryptoDataAction(data));
+        dispatch(changeTabAction(0));
+      }
 
-      dispatch(userCryptoDataSaveAction(formCryptoData));
-      setLoading(false);
-      dispatch(cryptoDataAction(data));
-      dispatch(changeTabAction(0));
+      setTimeout(() => {
+        setError(null);
+      }, 4000);
     } catch (error1) {
       setLoading(false);
     }
@@ -74,6 +84,11 @@ const FiatScreenCenter = () => {
   let handelStacking = () => {
     secondApi();
   };
+  const [error, setError] = useState(null);
+
+  let handelAgain = () => {
+    history.push("/");
+  };
 
   return (
     <>
@@ -81,6 +96,17 @@ const FiatScreenCenter = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <Hidden only={["sm", "xs"]}>
+        <Button
+          style={{
+            background: "#19469A",
+            color: "white",
+            float: "right",
+            marginRight: "10%",
+          }}
+          onClick={handelAgain}
+        >
+          Try again with different options
+        </Button>
         <Grid
           container
           direction="column"
@@ -127,6 +153,20 @@ const FiatScreenCenter = () => {
           </TableContainer>
           <br></br>
           <br></br>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: error ? "flex" : "none",
+              width: "100%",
+              justifyContent: "center",
+              marginBottom: "10px",
+            }}
+          >
+            <Alert variant="filled" severity="error">
+              {error && error}
+            </Alert>
+          </Grid>
 
           <Button
             style={{
@@ -183,6 +223,20 @@ const FiatScreenCenter = () => {
             </Table>
           </TableContainer>
           <br></br>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: error ? "flex" : "none",
+              width: "100%",
+              justifyContent: "center",
+              marginBottom: "10px",
+            }}
+          >
+            <Alert variant="filled" severity="error">
+              {error && error}
+            </Alert>
+          </Grid>
           <br></br>
 
           <Button

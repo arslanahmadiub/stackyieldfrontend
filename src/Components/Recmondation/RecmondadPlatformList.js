@@ -71,6 +71,7 @@ const RecmondadPlatformList = () => {
                           paddingTop: "15px",
                           paddingBottom: "5px",
                           overflow: "hidden",
+                          borderBottom: "1px solid black",
                         }}
                         key={key}
                       >

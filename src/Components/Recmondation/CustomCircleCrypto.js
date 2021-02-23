@@ -12,18 +12,46 @@ const CustomCircleCrypto = ({ currency, amount }) => {
           top: 45,
           width: "100%",
           justifyContent: "center",
+          textAlign: "center",
         }}
       >
-        <p
-          style={{
-            fontSize: "14px",
-            fontWeight: "606",
-            color: "#19469a",
-            overflow: "auto",
-          }}
-        >
-          {currency}
-        </p>
+        {currency && currency.length <= 15 ? (
+          <p
+            style={{
+              fontSize: "14px",
+              fontWeight: "606",
+              color: "#19469a",
+              overflow: "auto",
+              textAlign: "center",
+            }}
+          >
+            {currency}
+          </p>
+        ) : currency && currency.length <= 20 ? (
+          <p
+            style={{
+              fontSize: "12px",
+              fontWeight: "606",
+              color: "#19469a",
+              overflow: "auto",
+              textAlign: "center",
+            }}
+          >
+            {currency}
+          </p>
+        ) : currency && currency.length <= 30 ? (
+          <p
+            style={{
+              fontSize: "9px",
+              fontWeight: "606",
+              color: "#19469a",
+              overflow: "auto",
+              textAlign: "center",
+            }}
+          >
+            {currency}
+          </p>
+        ) : null}
       </div>
       <div
         style={{
@@ -33,6 +61,7 @@ const CustomCircleCrypto = ({ currency, amount }) => {
           top: 67,
           width: "100%",
           justifyContent: "center",
+          textAlign: "center",
         }}
       >
         <p
@@ -41,6 +70,7 @@ const CustomCircleCrypto = ({ currency, amount }) => {
             fontWeight: "606",
             color: "#19469a",
             overflow: "auto",
+            textAlign: "center",
           }}
         >
           {amount}

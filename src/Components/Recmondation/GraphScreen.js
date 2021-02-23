@@ -7,16 +7,12 @@ import { Hidden } from "@material-ui/core";
 import randomColor from "randomcolor";
 import { useSelector } from "react-redux";
 import CurrencySystem from "./CurrencySystem";
-import { MainColor, Background } from "../../Colors.json";
 
 const GraphScreen = () => {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
   });
-  const cryptoData = useSelector(
-    (state) => state.chatScreen.cryptoData.reward_dict
-  );
 
   return (
     <>
@@ -87,56 +83,6 @@ const GraphScreen = () => {
               <span style={{ color: "red" }}> Disclaimer</span> for further
               information.
             </p>
-          </Grid>
-        </Hidden>
-        <Hidden only={["lg", "md", "xl"]}>
-          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
-            <Grid
-              item
-              xs={12}
-              style={{
-                background: Background,
-                width: "100%",
-
-                height: "30",
-                overflow: "auto",
-              }}
-            >
-              <h3> Recommended Platform</h3>
-
-              <Paper elevation={0} className="recmondedPlatFormPaper">
-                {cryptoData &&
-                  Object.entries(cryptoData).map(([key, value]) => (
-                    <div
-                      style={{
-                        paddingLeft: "25px",
-                        paddingTop: "15px",
-                        paddingBottom: "5px",
-                        overflow: "hidden",
-                      }}
-                      key={key}
-                    >
-                      <p style={{ fontSize: "1.5rem", fontWeight: "600" }}>
-                        {key}
-                      </p>
-                      <a
-                        href={value.Link}
-                        target="_blank"
-                        style={{
-                          fontSize: "1rem",
-                          fontWeight: "600",
-                          color: MainColor,
-                        }}
-                      >
-                        {value.Link}
-                      </a>
-                      <p style={{ fontSize: "1rem", fontWeight: "400" }}>
-                        Reward: {value.Reward}
-                      </p>
-                    </div>
-                  ))}
-              </Paper>
-            </Grid>
           </Grid>
         </Hidden>
       </Grid>

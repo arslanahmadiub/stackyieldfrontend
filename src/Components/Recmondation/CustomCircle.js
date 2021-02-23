@@ -15,7 +15,13 @@ const CustomCircle = (props) => {
           justifyContent: "center",
         }}
       >
-        <p style={{ fontSize: "20px", fontWeight: "606", color: "#19469a" }}>
+        <p
+          style={{
+            fontSize: props.text.length < 11 ? "20px" : "17px",
+            fontWeight: "606",
+            color: "#19469a",
+          }}
+        >
           {props.text}
         </p>
       </div>

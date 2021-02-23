@@ -21,6 +21,9 @@ import { formCryptoApi } from "../../Services/ChatServices";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import { resetUser } from "../../action/chatScreenAction";
+import Alert from "@material-ui/lab/Alert";
+import { Hidden } from "@material-ui/core";
+
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -46,6 +49,7 @@ const ChatScreen = () => {
     setShowDateBox(false);
   };
 
+  const [error, setError] = useState(null);
   useEffect(() => {
     dispatch(resetUser());
   }, []);
@@ -96,6 +100,7 @@ const ChatScreen = () => {
   const [messageInput, setMessageInput] = useState("");
 
   let handelReload = () => {
+    setError(null);
     setMessages([
       {
         type: "system",
@@ -136,6 +141,13 @@ const ChatScreen = () => {
 
       default:
         return goodBy();
+    }
+  };
+
+  let updateScroll = () => {
+    var element = document.getElementById("inSidePaperMobile");
+    if (element) {
+      element.scrollTop = element.scrollHeight;
     }
   };
 
@@ -339,11 +351,11 @@ const ChatScreen = () => {
     try {
       setLoading(true);
       let { data } = await formFiatApi(apiOneFormData);
-
       setLoading(false);
       dispatch(userFiatDataSaveAction(dispatchUserData));
 
       dispatch(fiatDataAction(data));
+      return data;
     } catch (error) {
       setLoading(false);
     }
@@ -365,11 +377,15 @@ const ChatScreen = () => {
 
       let { data } = await formCryptoApi(apiTwoFormData);
 
-      dispatch(userCryptoDataSaveAction(formCryptoData));
-
-      setLoading(false);
-
-      dispatch(cryptoDataAction(data));
+      if (data.conversion_dict === "Cryptocurrency not availbale") {
+        setLoading(false);
+        return data;
+      } else {
+        dispatch(userCryptoDataSaveAction(formCryptoData));
+        setLoading(false);
+        dispatch(cryptoDataAction(data));
+        return data;
+      }
     } catch (error1) {
       setLoading(false);
     }
@@ -382,15 +398,24 @@ const ChatScreen = () => {
     let q2Answer = messageData[7].message;
 
     if (q1Answer === "Yes" && q2Answer === "No") {
-      await secondApi();
-      history.push("/crypto");
+      let firstData = await secondApi();
+      if (firstData.conversion_dict === "Cryptocurrency not availbale") {
+        setError("Cryptocurrency not availbale");
+      } else {
+        history.push("/crypto");
+      }
     } else if (q1Answer === "No" && q2Answer === "Yes") {
       await firstApi();
+
       history.push("/crypto");
     } else {
-      await secondApi();
       await firstApi();
-      history.push("/crypto");
+      let newData = await secondApi();
+      if (newData.conversion_dict === "Cryptocurrency not availbale") {
+        setError("Cryptocurrency not availbale");
+      } else {
+        history.push("/crypto");
+      }
     }
   };
 
@@ -412,6 +437,21 @@ const ChatScreen = () => {
   let reloadComponent = () => {
     return (
       <Grid container style={{ marginTop: "2%" }} id="messageContainer">
+        <Grid
+          item
+          xs={12}
+          style={{
+            display: error ? "flex" : "none",
+            width: "100%",
+            justifyContent: "center",
+            marginBottom: "10px",
+            paddingRight: "5%",
+          }}
+        >
+          <Alert variant="filled" severity="error">
+            {error && error}
+          </Alert>
+        </Grid>
         <Grid
           item
           xs={12}
@@ -470,7 +510,7 @@ const ChatScreen = () => {
   useEffect(() => {
     setTimeout(() => {
       addQuestion();
-    }, 3000);
+    }, 2000);
   }, [messages]);
 
   let scrollToBottom = () => {
@@ -481,6 +521,9 @@ const ChatScreen = () => {
 
   useEffect(() => {
     scrollToBottom();
+    setTimeout(() => {
+      updateScroll();
+    }, 300);
   }, [messages]);
 
   let handelMessageInput = (e) => {
@@ -632,24 +675,48 @@ const ChatScreen = () => {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Grid container direction="column">
-        <Paper elevation={0} id="inSidePaper">
-          {messages.map((item, index) => {
-            return item.message.length > 0 ? (
-              <div
-                className={item.type === "system" ? "left" : "right"}
-                key={index}
-              >
-                <p>{item.message}</p>
-              </div>
-            ) : null;
-          })}
-        </Paper>
-      </Grid>
-      {/* {renderAnswer()} */}
-      {messages.length === 11 && messages[10].message === "GoodBy...."
-        ? reloadComponent()
-        : renderAnswer()}
+      <Hidden only={["xs", "sm"]}>
+        <Grid container direction="column">
+          <Paper elevation={0} id="inSidePaper">
+            {messages.map((item, index) => {
+              return item.message.length > 0 ? (
+                <div
+                  className={item.type === "system" ? "left" : "right"}
+                  key={index}
+                >
+                  <p>{item.message}</p>
+                </div>
+              ) : null;
+            })}
+          </Paper>
+        </Grid>
+        {(messages.length === 11 && messages[10].message === "GoodBy....") ||
+        (messages.length === 12 && error)
+          ? reloadComponent()
+          : renderAnswer()}
+      </Hidden>
+      <Hidden only={["lg", "md", "xl"]}>
+        <Grid container direction="column">
+          <Paper elevation={0} id="inSidePaperMobile">
+            {messages.map((item, index) => {
+              return item.message.length > 0 ? (
+                <div
+                  className={
+                    item.type === "system" ? "leftMobile" : "rightMobile"
+                  }
+                  key={index}
+                >
+                  <p>{item.message}</p>
+                </div>
+              ) : null;
+            })}
+          </Paper>
+        </Grid>
+        {(messages.length === 11 && messages[10].message === "GoodBy....") ||
+        (messages.length === 12 && error)
+          ? reloadComponent()
+          : renderAnswer()}
+      </Hidden>
     </>
   );
 };

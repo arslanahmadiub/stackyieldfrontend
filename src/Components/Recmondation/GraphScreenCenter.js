@@ -11,6 +11,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrency } from "../../action/currencyAction";
 import { makeStyles } from "@material-ui/core/styles";
 import { Hidden } from "@material-ui/core";
+import { MainColor, Background } from "../../Colors.json";
+import { useHistory } from "react-router";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles({
   table: {
@@ -28,6 +31,7 @@ const GraphScreenCenter = () => {
   const cryptoDict = useSelector(
     (state) => state.chatScreen.cryptoData.crypto_dict
   );
+  let history = useHistory();
 
   const userCryptoData = useSelector(
     (state) => state.chatScreen.userCryptoData.count_crypto
@@ -90,10 +94,27 @@ const GraphScreenCenter = () => {
       },
     },
   };
-
+  const cryptoData = useSelector(
+    (state) => state.chatScreen.cryptoData.reward_dict
+  );
+  let handelAgain = () => {
+    history.push("/");
+  };
   return (
     <>
       <Hidden only={["xs", "sm"]}>
+        <Button
+          style={{
+            background: "#19469A",
+            color: "white",
+            float: "right",
+            marginRight: "10%",
+          }}
+          onClick={handelAgain}
+        >
+          Try again with different options
+        </Button>
+
         <Grid
           container
           direction="column"
@@ -216,9 +237,74 @@ const GraphScreenCenter = () => {
                 </TableHead>
               </Table>
             </TableContainer>
-            <br />
-            <br />
-            <br />
+            <Hidden only={["sm", "xs"]}>
+              <br />
+              <br />
+              <br />
+            </Hidden>
+            <Hidden only={["lg", "md", "xl"]}>
+              <Grid
+                container
+                style={{ marginTop: "20px", paddingLeft: "10px" }}
+              >
+                <Grid
+                  item
+                  xs={12}
+                  style={{
+                    background: Background,
+                    width: "100%",
+
+                    height: "30",
+                    overflow: "auto",
+                  }}
+                >
+                  <h3
+                    style={{
+                      background: "#19469A",
+                      padding: "10px",
+                      color: "white",
+                    }}
+                  >
+                    Recommended Platform
+                  </h3>
+
+                  <Paper elevation={0} className="recmondedPlatFormPaper">
+                    {cryptoData &&
+                      Object.entries(cryptoData).map(([key, value]) => (
+                        <div
+                          style={{
+                            paddingLeft: "25px",
+                            paddingTop: "15px",
+                            paddingBottom: "5px",
+                            overflow: "hidden",
+                            borderBottom: "1px solid black",
+                          }}
+                          key={key}
+                        >
+                          <p style={{ fontSize: "1.5rem", fontWeight: "600" }}>
+                            {key}
+                          </p>
+                          <a
+                            href={value.Link}
+                            target="_blank"
+                            style={{
+                              fontSize: "1rem",
+                              fontWeight: "600",
+                              color: MainColor,
+                            }}
+                          >
+                            {value.Link}
+                          </a>
+                          <p style={{ fontSize: "1rem", fontWeight: "400" }}>
+                            Reward: {value.Reward}
+                          </p>
+                        </div>
+                      ))}
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Hidden>
+
             <TableContainer component={Paper}>
               <Table className={classes.mobileTable} aria-label="simple table">
                 <TableHead>

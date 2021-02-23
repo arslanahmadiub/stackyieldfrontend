@@ -14,6 +14,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles } from "@material-ui/core/styles";
 import CustomCircle from "./CustomCircle";
 import { Hidden } from "@material-ui/core";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -93,10 +95,19 @@ const FiatScreenLeft = () => {
       setLoading(true);
       let { data } = await formCryptoApi(apiTwoFormData);
 
-      dispatch(userCryptoDataSaveAction(formCryptoData));
-      setLoading(false);
-      dispatch(cryptoDataAction(data));
-      dispatch(changeTabAction(0));
+      if (
+        data.conversion_dict === "Cryptocurrency not availbale" ||
+        data.conversion_dict === "Invalid end date"
+      ) {
+        setLoading(false);
+
+        emailToast();
+      } else {
+        dispatch(userCryptoDataSaveAction(formCryptoData));
+        setLoading(false);
+        dispatch(cryptoDataAction(data));
+        dispatch(changeTabAction(0));
+      }
     } catch (error1) {
       setLoading(false);
     }
@@ -106,11 +117,21 @@ const FiatScreenLeft = () => {
     secondApi(k, v);
   };
 
+  const emailToast = () => {
+    toast.error("Cryptocurrency not availbale..", {
+      position: "top-right",
+      autoClose: 5000,
+      draggable: false,
+    });
+  };
+
   return (
     <>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <ToastContainer />
+
       <Grid container direction="column">
         {/* top circle full screen */}
 
