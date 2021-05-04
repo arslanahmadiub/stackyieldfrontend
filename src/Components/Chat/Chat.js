@@ -54,7 +54,7 @@ const Chat = () => {
                 marginTop: "4%",
               }}
             >
-              <h3>Ai powered recommendation system</h3>
+              <h3>AI Powered Recommendation System</h3>
             </div>
             <div
               style={{

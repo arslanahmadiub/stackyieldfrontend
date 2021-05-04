@@ -16,6 +16,8 @@ import CustomCircle from "./CustomCircle";
 import { Hidden } from "@material-ui/core";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useHistory } from "react-router";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -66,6 +68,7 @@ const FiatScreenLeft = () => {
   );
 
   const [amountText, setAmountText] = useState(null);
+  let history = useHistory();
 
   let covertAmount = () => {
     let currency = Object.keys(cryptoDict)[0];
@@ -125,6 +128,9 @@ const FiatScreenLeft = () => {
     });
   };
 
+  let handelAgain = () => {
+    history.push("/");
+  };
   return (
     <>
       <Backdrop className={classes.backdrop} open={loading}>
@@ -194,6 +200,26 @@ const FiatScreenLeft = () => {
               <h2>Total Investment</h2>
             </div>
           </Grid>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              style={{
+                background: "#19469A",
+                color: "white",
+                marginTop: "25px",
+              }}
+              onClick={handelAgain}
+            >
+              Try again with different options
+            </Button>
+          </Grid>
         </Hidden>
 
         <Hidden only={["xs", "sm"]}>
@@ -221,7 +247,7 @@ const FiatScreenLeft = () => {
         </Hidden>
 
         <Hidden only={["lg", "md", "xl"]}>
-          <Grid container style={{ marginTop: "20px", paddingLeft: "10px" }}>
+          <Grid container style={{ marginTop: "20px", padding: "10px" }}>
             <Grid item xs={12}>
               <h3> Conversion Rates</h3>
 

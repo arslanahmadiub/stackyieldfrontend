@@ -184,11 +184,11 @@ const FiatScreenCenter = () => {
           container
           direction="column"
           style={{
-            padding: "2%",
             marginTop: "5%",
+            overflowX: "hidden",
           }}
         >
-          <TableContainer component={Paper} style={{ width: "100vw" }}>
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>

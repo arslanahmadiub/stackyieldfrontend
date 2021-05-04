@@ -1,5 +1,5 @@
 import "./custom.scss";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import MainRecmondationScreen from "./Components/Recmondation/MainRecmondationScreen";
 import Chat from "./Components/Chat/Chat";

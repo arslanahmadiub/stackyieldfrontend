@@ -54,36 +54,46 @@ const ChatScreen = () => {
     dispatch(resetUser());
   }, []);
 
+  const [tomorrowDate, setTomorrowDate] = useState("");
+
+  let getTomorrow = () => {
+    const today = new Date();
+
+    let tomorrow = new Date();
+    let tomorrowDate = tomorrow.setDate(today.getDate() + 1);
+    let finalDate = moment(tomorrowDate).format("yyyy-MM-DD");
+    setTomorrowDate(finalDate);
+  };
+
+  useEffect(() => {
+    getTomorrow();
+  }, []);
+
   let questionList = [
     {
       type: "system",
 
-      message: "Do you own a cryptocurrency?",
+      message: "Do you want to stake a cryptocurrency?",
     },
     {
       type: "system",
 
-      message: "What cryptocurrency you have?",
+      message: "Which cryptocurrency do you want to stake?",
     },
     {
       type: "system",
 
-      message: "How much this cryptocurrency you have?",
+      message: "How much of this cryptocurrency do you want to stake?",
     },
     {
       type: "system",
 
-      message: "Do you want to invest in fiat money?",
+      message: "Do you also want to invest in fiat money?",
     },
     {
       type: "system",
 
       message: "How much fiat money in dollars you have?",
-    },
-    {
-      type: "system",
-
-      message: "Please tell me your preferred end date?",
     },
   ];
 
@@ -134,9 +144,7 @@ const ChatScreen = () => {
           "Enter Fiat Money in USD...",
           "number"
         );
-      case 11:
-        return dateInputAnswerComponent("Chosse End Date...");
-      case 12:
+      case 10:
         return submitAnswerComponent();
 
       default:
@@ -207,10 +215,12 @@ const ChatScreen = () => {
 
   let handelDateInput = () => {
     setShowDateBox(!showDateBox);
+    let item = document.getElementById("datemessageTextInput");
+    item.blur();
   };
 
   let goodBy = () => {
-    setTimeout(() => {
+    if (messages.length === 10) {
       return (
         <Grid container style={{ marginTop: "2%" }} id="messageContainer">
           <Grid item xs={10}>
@@ -233,7 +243,7 @@ const ChatScreen = () => {
           </Grid>
         </Grid>
       );
-    }, 3100);
+    }
   };
 
   let handelDate = () => {};
@@ -342,7 +352,7 @@ const ChatScreen = () => {
 
     let dispatchUserData = {
       count_fiat: messageData[9].message,
-      end_date: messageData[11].message,
+      end_date: tomorrowDate,
     };
 
     let newData2 = JSON.stringify(formFiatData);
@@ -351,6 +361,7 @@ const ChatScreen = () => {
     try {
       setLoading(true);
       let { data } = await formFiatApi(apiOneFormData);
+
       setLoading(false);
       dispatch(userFiatDataSaveAction(dispatchUserData));
 
@@ -367,7 +378,7 @@ const ChatScreen = () => {
     let formCryptoData = {
       type_crypto: messageData[3].message,
       count_crypto: messageData[5].message,
-      end_date: messageData[11].message,
+      end_date: tomorrowDate,
     };
     let newData = JSON.stringify(formCryptoData);
     apiTwoFormData.append("data", newData);
@@ -377,7 +388,7 @@ const ChatScreen = () => {
 
       let { data } = await formCryptoApi(apiTwoFormData);
 
-      if (data.conversion_dict === "Cryptocurrency not availbale") {
+      if (data.conversion_dict === "Cryptocurrency not available") {
         setLoading(false);
         return data;
       } else {
@@ -399,8 +410,9 @@ const ChatScreen = () => {
 
     if (q1Answer === "Yes" && q2Answer === "No") {
       let firstData = await secondApi();
+
       if (firstData.conversion_dict === "Cryptocurrency not availbale") {
-        setError("Cryptocurrency not availbale");
+        setError("Cryptocurrency not available");
       } else {
         history.push("/crypto");
       }
@@ -411,8 +423,9 @@ const ChatScreen = () => {
     } else {
       await firstApi();
       let newData = await secondApi();
+
       if (newData.conversion_dict === "Cryptocurrency not availbale") {
-        setError("Cryptocurrency not availbale");
+        setError("Cryptocurrency not available");
       } else {
         history.push("/crypto");
       }
@@ -479,7 +492,7 @@ const ChatScreen = () => {
       };
       previousMessages.push(newMessageObject);
       setMessages(previousMessages);
-    } else {
+    } else if (messages.length < 10) {
       let previousMessages1 = [...messages];
       let newMessageObject1 = questionList[value];
       previousMessages1.push(newMessageObject1);
@@ -502,15 +515,19 @@ const ChatScreen = () => {
         addQuestionFunction(4);
         break;
       case 10:
-        addQuestionFunction(5);
+        addQuestionFunction();
         break;
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    if (messages.length === 10) {
       addQuestion();
-    }, 2000);
+    } else {
+      setTimeout(() => {
+        addQuestion();
+      }, 2000);
+    }
   }, [messages]);
 
   let scrollToBottom = () => {
@@ -659,7 +676,7 @@ const ChatScreen = () => {
         if (dateValue.length > 0) {
           let senderObject = {
             type: "user",
-            message: dateValue,
+            message: tomorrowDate,
           };
           let newMessage = [...messages];
           newMessage.push(senderObject);
@@ -690,8 +707,7 @@ const ChatScreen = () => {
             })}
           </Paper>
         </Grid>
-        {(messages.length === 11 && messages[10].message === "GoodBy....") ||
-        (messages.length === 12 && error)
+        {messages.length === 11 && messages[10].message === "GoodBy...."
           ? reloadComponent()
           : renderAnswer()}
       </Hidden>

@@ -87,7 +87,7 @@ const Tabs = (props) => {
           }}
           onClick={handelDateClick}
         >
-          {tabName === "Crypto" ? "User Date Input" : "Recommended Crypto"}
+          {tabName === "Crypto" ? "Custom Date" : "Recommended Crypto"}
         </TabLabelItem>
         {headers &&
           headers.map((header, index) => {

@@ -26,12 +26,7 @@ const RecmondadPlatformList = () => {
   return (
     <>
       <Hidden only={["xs", "sm"]}>
-        <Grid
-          container
-          direction="column"
-          justify="flex-start"
-          alignItems="center"
-        >
+        <Grid container>
           {tabName === "Crypto" ? (
             <>
               <Grid
